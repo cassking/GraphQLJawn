@@ -12,14 +12,14 @@ const main = async () => {
 
   const generator = orm.getSchemaGenerator();
   await generator.updateSchema();
-  const today = new Date()
+  const today = Date.now()
   console.log("--------------------sql post from yarn dev2---------------------- ")
 
-  const post = orm.em.create(Post, {id: 2, title: "my first post", created_at: today  });
+  const post = orm.em.create(Post, { title: "my first post", created_at: today, updated_at: today });
   await orm.em.persistAndFlush(post);
 
   main().catch((err) => {
-    console.log("**-----ssserror -------*", err);
+    console.log("**-----ANY ERRORRS?????? -------*", err);
   });
 
   console.log("dirname",__dirname )
