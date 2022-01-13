@@ -37,3 +37,15 @@ the yarn dev2 -->
 // $ npx mikro-orm
 // # or when installed globally
 // $ mikro-orm
+
+
+to run migrations
+sequence is:
++ add new entities to the config file example [Post]
++ run the migrations cli in the terminal
+npx mikro-orm migration:create  --run
++ 
+
+command line:  
+this runs in the index file 
+await orm.getMigrator().up; // run migrations
