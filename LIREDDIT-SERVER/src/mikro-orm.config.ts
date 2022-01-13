@@ -7,15 +7,13 @@ export default {
     migrations: {
       path: path.join(__dirname,'./migrations'), // path to the folder with migrations
       pattern: /^[\w-]+\d+\.[tj]s$/, // regex pattern for the migration files
-
     },
   entities: [Post],
-  dbName: 'libreddit2',
-  user: 'cassi',
-  // password: 'xlt1jkl',
+  dbName: 'redditapp',
+  // user: 'cassi',
   debug: !__prod__,
   type: 'postgresql',
   //owner cassandrakingoldmac
-  
+
 } as Parameters<typeof MikroORM.init>[0];
 
