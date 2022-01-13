@@ -33,6 +33,7 @@ the yarn dev2 -->
 
 // to start app use `yarn dev2`
 // to start app use `$ yarn dev2`
+
 // $ node node_modules/.bin/mikro-orm
 // $ npx mikro-orm
 // # or when installed globally
