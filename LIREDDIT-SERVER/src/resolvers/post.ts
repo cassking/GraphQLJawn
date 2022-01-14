@@ -32,7 +32,7 @@ export class PostResolver {
   }
 
   @Mutation(() => Post, { nullable: true })
-    async updatePost( // CR Update D - create new post
+    async updatePost( // CR Update D - update a post
       @Arg('id') id: number,
       @Arg('title', () => String, {nullable: true}) title: string,
       @Ctx() { em }: MyContext
@@ -41,8 +41,20 @@ export class PostResolver {
         if (!post) {
           return null
         }
-        post.title = title
+        if(typeof title !== 'undefined') {
+          post.title = title;
+          await em.persistAndFlush(post)
+        }
         return post
   }
+
+  @Mutation(() => Boolean)
+  async deletePost( // CRU Delete - delete post
+    @Arg('id') id: number,
+    @Ctx() { em }: MyContext
+    ): Promise<boolean> {
+      await em.nativeDelete(Post, {id})
+      return true
+}
 
 }
