@@ -18,7 +18,9 @@ const main = async () => {
   const orm = await MikroORM.init(microConfig);
   // ^^ connect to db
   await orm.getMigrator().up;
-  // ^^run migrations automatically
+  // ^^run migrations automatically when server starts
+  // it does not rerun old migrations 1:15:05 in video
+  // if you look at the sql statemenst, you see that mikroorm creates a migrations table and keeps track of what migrations it has/has not run
 
   // without this, apollo will throw an error.
   const app = express();
