@@ -1,0 +1,16 @@
+node_modules/
+LIREDDIT_SERVER/node_modules/
+LIREDDIT-SERVER/node_modules/
+LIREDDIT-SERVER/node_modules/
+
+# compiled
+LIREDDIT-SERVER/dist
+
+# debug
+# ignore ALL .log files
+*.log
+LIREDDIT-SERVER/yarn-error.log
+
+
+# misc
+.DS_Store
