@@ -2,12 +2,12 @@ import { __prod__ } from './constants';
 import "reflect-metadata";
 import { MikroORM } from '@mikro-orm/core';
 import microConfig from "./mikro-orm.config";
-// import { Post } from './entities/Post';
 import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
 import { buildSchema } from 'type-graphql';
 import { HelloResolver } from './resolvers/hello';
 import { PostResolver } from './resolvers/post';
+import { UserResolver } from './resolvers/User';
 
 
 // for all awaits if looking at type of return and is promise use await
@@ -26,8 +26,8 @@ const main = async () => {
   const app = express();
 
   const apolloServer = new ApolloServer({
-    schema: await buildSchema({
-      resolvers: [HelloResolver, PostResolver],
+    schema: await buildSchema({ // this builds schema
+      resolvers: [HelloResolver, PostResolver, UserResolver],
       validate: false // for now
     }),
     // context special object that is accessible by all resolvers

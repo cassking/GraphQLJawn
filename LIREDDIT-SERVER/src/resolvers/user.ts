@@ -1,6 +1,6 @@
 import { MyContext } from './../types';
 import { Arg, Ctx, Field, InputType, Mutation, Resolver } from "type-graphql";
-import { User } from 'src/entities/User';
+import { User } from '../entities/User';
 import argon2 from 'argon2';
 
 // Inputs are an alternate way to Args in GraphQL
@@ -16,7 +16,8 @@ class UsernamePasswordInput {
 @Resolver()
 export class UserResolver {
   // craete class and decorate with @Resolver decorator
-  @Mutation(() => String)
+  // @Mutation(() => String)
+  @Mutation(() => User)
   async register(
     @Arg('userOptions') userOptions: UsernamePasswordInput,
     @Ctx() {em}: MyContext
