@@ -1,5 +1,5 @@
 import { MyContext } from './../types';
-import { Arg, Ctx, Field, InputType, Mutation, Resolver } from "type-graphql";
+import { Arg, Ctx, Field, InputType, Mutation, ObjectType, Resolver } from "type-graphql";
 import { User } from '../entities/User';
 import argon2 from 'argon2';
 
@@ -10,6 +10,24 @@ class UsernamePasswordInput {
   username: string
   @Field()
   password: string
+}
+
+@ObjectType()
+class FieldError {
+  @Field()
+  field: string;
+  @Field()
+  message: string;
+
+}
+@ObjectType()
+class UserResponse {
+  @Field(() => [FieldError], {nullable: true})
+  errors?: FieldError[]
+
+  @Field( () => User, {nullable: true})
+  user?: User
+  
 }
 
 
@@ -30,4 +48,33 @@ export class UserResolver {
     await em.persistAndFlush(user) //saves user to DB do not want to use plain text version of pw either we will encrpty with argon2
     return user
   }
+
+  @Mutation(() => UserResponse)
+  async login(
+    @Arg('userOptions') userOptions: UsernamePasswordInput,
+    @Ctx() {em}: MyContext 
+  ): Promise<UserResponse> {
+    const user = await em.findOne(User, { username: userOptions.username.toLowerCase()})
+    // error handling
+    if (!user) {
+      return {
+        errors:[{
+          field: 'username',
+          message: 'that username does not exist'
+        }]
+      }
+    }
+    const valid = await argon2.verify(user.password, userOptions.password)
+    if (!valid) {
+      return {
+        errors:[{
+          field: 'password',
+          message: 'incorrect pw'
+        }]
+      }
+    }
+    return {
+      user
+  }
+}
 }

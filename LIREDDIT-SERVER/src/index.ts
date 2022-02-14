@@ -27,6 +27,7 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({ // this builds schema
+      // add all resolvers here
       resolvers: [HelloResolver, PostResolver, UserResolver],
       validate: false // for now
     }),

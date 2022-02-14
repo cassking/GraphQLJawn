@@ -5,6 +5,7 @@
 - TypeScript
 - GraphQL
 - URQL/Apollo
+- Argon2 
 - Node.js
 - PostgreSQL
 - MikroORM/TypeORM
