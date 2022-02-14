@@ -5,7 +5,7 @@
 - TypeScript
 - GraphQL
 - URQL/Apollo
-- Argon2 
+- Argon2 (node-argon2)
 - Node.js
 - PostgreSQL
 - MikroORM/TypeORM
@@ -52,4 +52,70 @@ sequence is in terminal:
 // $ npx mikro-orm
 // # or when installed globally
 // $ mikro-orm
+
+// SAMPLE MIGRATIONS
+mutation($title: String!) {
+  createPost(title: $title) {
+    id
+    createdAt
+    updatedAt
+    title
+  }
+}
+
+mutation {
+  register(userOptions:
+  {username: "wanda", password:"pass12345"}
+  ) {
+      id
+      createdAt
+      updatedAt
+      username
+}
+}
+
+mutation{
+  deletePost(id: 5)
+}
+
+mutation($title: String!) {
+  updatePost(id: 1 title: $title) {
+    id
+    createdAt
+    updatedAt
+    title
+  }
+}
+
+{
+  posts {
+    id
+    title
+    createdAt
+    updatedAt
+  }
+}
+
+mutation {
+  register(userOptions:
+  {username: "cassinew", password: "cassix"}) {
+    id
+    createdAt
+    updatedAt
+    username
+  }
+}
+mutation {
+  login(userOptions: {username: "cassine", password: "cassix"}) {
+    errors {
+      field
+      message
+    }
+    user {
+      id
+      username
+    }
+  }
+}
+
 

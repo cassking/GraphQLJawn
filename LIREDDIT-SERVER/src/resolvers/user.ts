@@ -13,7 +13,7 @@ class UsernamePasswordInput {
 }
 
 @ObjectType()
-class FieldError {
+class FieldError {// does field have an error
   @Field()
   field: string;
   @Field()
@@ -22,6 +22,9 @@ class FieldError {
 }
 @ObjectType()
 class UserResponse {
+  // upon creating user if improper return error
+  // user response returns user if worked properly 
+  // or return error if not
   @Field(() => [FieldError], {nullable: true})
   errors?: FieldError[]
 
@@ -35,11 +38,28 @@ class UserResponse {
 export class UserResolver {
   // craete class and decorate with @Resolver decorator
   // @Mutation(() => String)
-  @Mutation(() => User)
+  // @Mutation(() => User)
+  @Mutation(() => UserResponse) // update to use error handling
   async register(
     @Arg('userOptions') userOptions: UsernamePasswordInput,
     @Ctx() {em}: MyContext
-  ) {
+  ): Promise<UserResponse>{
+     if (userOptions.username.length <= 2) {
+      return {
+        errors: [{
+          field: "username",
+          message: "username length is too short, needs to be 2 or more characters"
+        }]
+      }
+     }
+     if (userOptions.password.length <= 3) {
+      return {
+        errors: [{
+          field: "password",
+          message: "password length is too short, needs to be 3 or more characters"
+        }]
+      }
+     }
     const hashedPassword = await argon2.hash(userOptions.password)// since it returns a promise, await it
     const user =  em.create(User, {
       username: userOptions.username,
@@ -51,11 +71,14 @@ export class UserResolver {
 
   @Mutation(() => UserResponse)
   async login(
+    // login returns userResponse
     @Arg('userOptions') userOptions: UsernamePasswordInput,
-    @Ctx() {em}: MyContext 
+    @Ctx() {em}: MyContext
   ): Promise<UserResponse> {
+    // look up user by username
+    // findOrFail also
     const user = await em.findOne(User, { username: userOptions.username.toLowerCase()})
-    // error handling
+    // error handling if no user found
     if (!user) {
       return {
         errors:[{
@@ -64,15 +87,16 @@ export class UserResolver {
         }]
       }
     }
-    const valid = await argon2.verify(user.password, userOptions.password)
+    const valid = await argon2.verify(user.password, userOptions.password) // compares hashed pw with pw input
     if (!valid) {
       return {
         errors:[{
           field: 'password',
-          message: 'incorrect pw'
+          message: 'incorrect password entered'
         }]
       }
     }
+    //if user found and pw correct then user successfully entered and login granted
     return {
       user
   }
