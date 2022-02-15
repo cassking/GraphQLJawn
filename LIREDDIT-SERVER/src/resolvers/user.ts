@@ -51,22 +51,38 @@ export class UserResolver {
           message: "username length is too short, needs to be 2 or more characters"
         }]
       }
-     }
-     if (userOptions.password.length <= 3) {
+    }
+    if (userOptions.password.length <= 3) {
       return {
         errors: [{
           field: "password",
           message: "password length is too short, needs to be 3 or more characters"
         }]
       }
-     }
+    }
     const hashedPassword = await argon2.hash(userOptions.password)// since it returns a promise, await it
     const user =  em.create(User, {
       username: userOptions.username,
       password: hashedPassword // we save this in DB
-    })// do not want to pass the user pw
-    await em.persistAndFlush(user) //saves user to DB do not want to use plain text version of pw either we will encrpty with argon2
-    return user
+    });// do not want to pass the user pw
+    try {
+      await em.persistAndFlush(user) //saves user to DB do not want to use plain text version of pw either we will encrpty with argon2
+    } catch(err) {
+      if (err.code === '23505' || err.detail.includes("already exists")) {
+        // duplicate username error
+      return {
+        errors: [
+          {
+          field: "username",
+          message: "username already taken"
+        },
+      ],
+      };
+      }
+      console.log("message", err.message)
+    }
+
+    return { user }
   }
 
   @Mutation(() => UserResponse)

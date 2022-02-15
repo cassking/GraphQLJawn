@@ -118,4 +118,32 @@ mutation {
   }
 }
 
+mutation {
+  register(userOptions: 
+  {username: "ca", password: "ca"}) {
+    errors {
+      field
+      message
+    }
+    user {
+      id
+      username
+    }
+  }
+} will return with errors
+{
+  "data": {
+    "register": {
+      "errors": [
+        {
+          "field": "username",
+          "message": "username length is too short, needs to be 2 or more characters"
+        }
+      ],
+      "user": null
+    }
+  }
+}
+--->
+
 
